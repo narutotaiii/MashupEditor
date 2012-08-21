@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>ui</title>
+		<meta name="author" content="Aminmi" />
+		<style type="text/css">
+		body {
+			font-family: "Myriad Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
+		.userName {
+			width: 400px;
+			margin: auto;
+			background-color: #eee;
+			border: 1px solid #ccc;
+			border-radius: 15px;
+			padding: 20px;
+			margin-top: 20px;
+			margin-bottom: 50px;
+		}
+		label.result {
+			width: 120px;
+			display: inline-block;
+		}
+		label.typehere {
+			position: relative;
+			left: 100px;		
+			color: #ccc;
+		}
+		.userName input[type="text"] {
+			padding: 3px 10px;
+			border-radius: 20px;
+			border: 1px solid #ccc;
+		}
+		.userName input[type="button"] {
+			padding: 3px 10px;
+			border: 1px solid #ccc;
+			background-color: #ccc;
+			border-radius: 10px;
+			-webkit-transition: all 0.3s;
+			-moz-transition: all 0.3s;
+			cursor: pointer;
+			font-family: "Myriad Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		}
+		.userName input[type="button"]:hover {
+			background-color: #bbb;
+			color: #eee;
+		}
+		.userName input[type="checkbox"] {
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+		h4 span {
+			text-decoration: underline;
+		}
+		.buttons {
+			text-align: right;
+		}
+		</style>
+	</head>
+	<body>
+		<div class="userName">
+			<h4>Please input your ID:</h4>
+			<div class="buttons">
+				<label for="inputName" class="typehere">type here...</label>
+				<input type="text" size="30" id="inputName" />
+				<input type="button" value="Submit"/>
+			</div>
+		</div>
+		<div class="userName">
+			<h4>Your ID is : <span>test</span></h4>
+			<div><input type="checkbox" />Flight - Weather Mashupdoc</div>
+			<div><input type="checkbox" />Flight - Hotel Mashupdoc</div>
+			<div><input type="checkbox" />Full Mashupdoc</div>
+			<div class="buttons">
+				<input type="button" value="Submit"/>
+			</div>
+		</div>
+		<div class="userName">
+			<h4>Your ID is : <span>test</span></h4>
+			<div>
+				<label class="result" for="Departure">Departure</label>
+				<input type="text" size="30" id="Departure" value="Taoyuan"/>
+			</div>
+			<div>
+				<label class="result" for="Destination">Destination</label>
+				<input type="text" size="30" id="Destination" value="Kaohsiung"/>
+			</div>
+			<div class="buttons">
+				<input type="button" value="Submit"/>
+			</div>
+		</div>
+	</body>
+</html>

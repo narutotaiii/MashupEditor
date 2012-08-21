@@ -1,0 +1,48 @@
+a.mw_link {
+	background:#dfdfdf url(link.gif) right no-repeat;
+	padding:0px 16px 0px 2px;
+	text-decoration:none;
+}
+a.mw_link:hover {
+	background:#ccc url(hover.gif) right no-repeat;
+	color:#FFF;
+}
+
+div.mw_tip {
+	width:300px;
+	background:#dfdfdf url(close.gif) right top no-repeat;
+	padding: 4px;
+	cursor:pointer;
+	color:#000;
+	opacity:0.95; -moz-opacity:0.95; filter:alpha(opacity=95);
+	border:1px solid #ccc;
+}
+div.mw_tip h6 {
+	margin:0 0 5px; padding:0;
+	font-size:100%;
+	font-weight:normal;
+	color:#000;
+	line-height:1em;
+}
+div.mw_tip p, div.mw_tip ul, div.mw_tip ol {
+	margin:0; padding:0;
+	font-size:12px;
+	color:#000;
+	font-family:"微軟正黑體", "Microsoft JhengHei", "黑體-繁","Heiti TC", "儷黑 Pro", "LiHei Pro", "新細明體", "PMingLiU";
+}
+div.mw_tip ul, div.mw_tip ol {
+	padding:0 0 0 30px;
+}
+div.mw_tip div {
+	margin:0; padding:2px;
+	border-top:1px solid #ccc;
+	font-size:10px;
+	font-family:Arial;
+	text-align:center;
+}
+div.mw_tip a {
+	color:#333; text-decoration:none;
+}
+div.mw_tip a:hover {
+	color:#333; text-decoration:underline;
+}

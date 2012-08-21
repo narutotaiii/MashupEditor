@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>demo</title>
+		<meta name="author" content="Aminmi" />
+		<link href="layout.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="banner">
+			<h1>SOSELAB Mashup Engine</h1>
+		</div>
+		<div id="main">
+		<!--start searchServiceUI-->
+		<div id="searchServiceUI" data-step="1">
+			<h2>1st Step - Select services</h2>
+			<div class="searchService">
+				<span>Search Services:</span>
+				<input size="30" class="searchService" />
+			</div>
+			<div class="searchServiceResult"> 
+				<div class="services">
+					<div class="searchResult">
+						<div class="aServiceTitle">
+							<span class="serviceName">Name</span>
+							<span class="serviceType">Type</span>
+							<span class="columNum">Columns</span>
+							<span class="description">Description</span>
+						</div>
+						<div class="aService" data-serviceID="1">
+							<span class="serviceName">Flights</span>
+							<span class="serviceType">RESTful</span>
+							<span class="columNum">4</span>
+							<span class="description">About flights..</span>
+						</div>
+						<div class="aService" data-serviceID="2">
+							<span class="serviceName">Weather</span>
+							<span class="serviceType">RESTful</span>
+							<span class="columNum">3</span>
+							<span class="description">About weather..</span>
+						</div>
+						<div class="aService" data-serviceID="3">
+							<span class="serviceName">Hotels</span>
+							<span class="serviceType">RESTful</span>
+							<span class="columNum">3</span>
+							<span class="description">About hotels..</span>
+						</div>
+					</div>
+					<div class="recommendService">
+						<div class="aServiceTitle">
+							Associated Recommended Service:
+						</div>
+						<div class="aService" data-serviceID="1">
+							<span class="serviceName">Flights</span>
+							<span class="serviceType">RESTful</span>
+							<span class="columNum">4</span>
+							<span class="description">About flights..</span>
+						</div>
+					</div>
+				</div>
+				<div class="pickedService">
+					<div class="aServiceTitle">
+						The services you picked:
+					</div>
+					<div class="aService" data-serviceID="3">
+						<span class="serviceName">Hotels</span>
+						<span class="serviceType">RESTful</span>
+						<span class="columNum">3</span>
+						<span class="description">About hotels..</span>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+		<!--end searchServiceUI-->
+			<div id="menu">
+				<div id="menuList">					
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

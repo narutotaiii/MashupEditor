@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>demo3</title>
+		<meta name="author" content="Aminmi" />		
+		<link href="layout.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="banner">
+			<h1>SOSELAB Mashup Engine</h1>
+		</div>
+		<div id="main">
+		<!--start designFlowUI-->
+			<div id="designFlowUI" data-step="3">
+				<h2>3rd Step - Design flow</h2>
+				<div class="designFlow">
+					<div class="aLevel">
+						<div class="aNode">
+							<h3>Start</h3>
+						</div>
+						<div class="aLevelMenu">
+							<div class="pattern">
+								<select>
+									<option>Sequence</option>
+									<option>Parallel</option>
+								</select>
+							</div>
+							<div class="aPlus">+</div>
+						</div>
+					</div>
+					<div class="aLevel">
+						<div class="aNode">
+							<div class="inputs">
+								<h4>Inputs</h4>
+								<div class="aInput"><label>Company</label><input type="checkbox" checked="checked" /></div>
+								<div class="aInput"><label>Date</label><input type="checkbox" checked="checked"/></div>
+								<div class="aInput"><label>Depature</label><input type="checkbox" checked="checked"/></div>
+								<div class="aInput"><label>Arrive</label><input type="checkbox" checked="checked"/></div>
+							</div>
+							<h3>Flights</h3>
+							<div class="outputs">
+								<h4>Outputs</h4>
+								<div class="aOutput"><label>Company</label></div>
+								<div class="aOutput"><label>Date</label></div>
+								<div class="aOutput"><label>Depature</label></div>
+								<div class="aOutput"><label>Arrive</label></div>
+							</div>						
+						</div>
+						<div class="aLevelMenu">
+							<div class="pattern">
+								<select>
+									<option>Sequence</option>
+									<option>Parallel</option>
+								</select>
+							</div>
+							<div class="aPlus">+</div>
+						</div>
+					</div>
+					<div class="aLevel">
+						<div class="aNode">
+							<div class="inputs">
+								<h4>Inputs</h4>
+								<div class="aInput"><label>Location</label><input type="checkbox"/></div>
+							</div>
+							<h3>Weather</h3>
+							<div class="outputs">
+								<h4>Outputs</h4>
+								<div class="aOutput"><label>Location</label></div>
+							</div>
+						</div>
+						<div class="aNode">
+							<h4>Recommend services</h4>
+							<select>
+								<option>Hotels</option>
+							</select>
+						</div>
+						<div class="aLevelMenu">
+							<div class="pattern">
+								<select>
+									<option>Sequence</option>
+									<option>Parallel</option>
+								</select>
+							</div>
+							<div class="aPlus">+</div>
+						</div>
+					</div>
+					<div class="aLevel">
+						<div class="aNode">
+							<h3>End</h3>
+						</div>
+					</div>
+				</div>
+				<div class="designFlowMenu">
+					<div class="aButton">
+						See Others' Design...
+					</div>
+					<div class="aButton">
+						I Have Done!
+					</div>
+				</div>
+				<div class="recommendDesignFlow">
+					<div class="aLevel">
+						<div><b>Overall Recommended Design</b></div>
+						<div>Flights ( Weather Hotels ) : 0.8</div>
+						<div class="aNode">
+							Start
+						</div>
+					</div>
+					<div class="aLevel">
+						<div class="aNode">
+							Flights					
+						</div>
+					</div>
+					<div class="aLevel">
+						<div class="aNode">
+							Weather
+						</div>
+						<div class="aNode">
+							Hotel
+						</div>
+					</div>
+					<div class="aLevel">
+						<div class="aNode">
+							End
+						</div>
+					</div>
+				</div>
+			</div>		
+		<!--end designFlowUI-->
+			<div id="menu">
+				<div id="menuList">					
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

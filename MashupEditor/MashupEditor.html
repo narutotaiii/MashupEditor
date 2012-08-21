@@ -1,0 +1,477 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>MashupEditor</title>
+		<meta name="author" content="Aminmi" />		
+		<link href="layout.css" rel="stylesheet" type="text/css" />
+		<!--Jquery-->
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+		<!--Javascript-->
+		<script src="js/goStep.js"></script>
+		<script src="js/searchService.js"></script>
+		<script src="js/columnModify.js"></script>
+		<script src="js/designFlow.js"></script>
+	</head>
+	<body>
+		<div id="banner">
+			<h1>SOSELAB Mashup Engine</h1>
+		</div>
+		<div id="main">
+			<!--start searchServiceUI-->
+			<div id="searchServiceUI" data-step="1">
+				<h2>1st Step - Select services</h2>
+				<div class="searchService">
+					<span>Search Services:</span>
+					<input size="30" class="searchService" />
+					<div class="searchIcon" onclick="searchService()"></div>
+				</div>
+				<div class="searchServiceResult"> 
+					<div class="services">
+						<div class="searchResult">
+							<div class="aServiceTitle">
+								<span class="serviceName">Name</span>
+								<span class="serviceType">Type</span>
+								<span class="columNum">Columns</span>
+								<span class="description">Description</span>
+							</div>
+							<div id="searchResult">
+								<!--
+								<div class="aService" data-serviceID="1">
+									<span class="serviceName">Flights</span>
+									<span class="serviceType">RESTful</span>
+									<span class="columNum">4</span>
+									<span class="description">About flights..</span>
+								</div>
+								-->
+							</div>
+						</div>
+						<div class="recommendService">
+							<div class="aServiceTitle">
+								Associated Recommended Service:
+							</div>
+							<div id="recommendService">
+								<!--
+								<div class="aService" data-serviceID="1">
+									<span class="serviceName">Flights</span>
+									<span class="serviceType">RESTful</span>
+									<span class="columNum">4</span>
+									<span class="description">About flights..</span>
+								</div>
+								-->
+							</div>
+						</div>
+					</div>
+					<div class="pickedService">
+						<div class="aServiceTitle">
+							The services you picked: ( click it again to cancel )
+						</div>
+						<div id="pickedService">
+							<!--
+							<div class="aService" data-serviceID="3">
+								<span class="serviceName">Hotels</span>
+								<span class="serviceType">RESTful</span>
+								<span class="columNum">3</span>
+								<span class="description">About hotels..</span>
+							</div>
+							-->
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+			<!--end searchServiceUI-->
+			<!--start columnModifyUI-->
+			<div id="columnModifyUI" data-step="2">
+				<h2>2nd Step - Change the columns name</h2>
+				<div class="columnModify">
+					<div class="selectServices">
+						<div class="aSelectService">Flights</div>
+						<div class="aSelectService">Weather</div>
+						<div class="aSelectService">Hotels</div>
+					</div>
+					<div class="columns">
+						<div data-service="Flights" class="aServiceColumn">
+							<div class="aColumn"><label>Company</label><input size="20" /></div>
+							<div class="aColumn"><label>Date</label><input size="20" /></div>
+							<div class="aColumn"><label>Depature</label><input size="20" /></div>
+							<div class="aColumn"><label>Arrive</label><input size="20" /></div>
+						</div>
+						<div data-service="Weather" class="aServiceColumn">
+							<div class="aColumn"><label>Location</label><input size="20" /></div>
+							<div class="aColumn"><label>Date</label><input size="20" /></div>
+						</div>
+						<div data-service="Hotels" class="aServiceColumn">
+							<div class="aColumn"><label>Hotel Name</label><input size="20" /></div>
+							<div class="aColumn"><label>Address</label><input size="20" /></div>
+							<div class="aColumn"><label>Phone</label><input size="20" /></div>
+							<div class="aColumn"><label>Date</label><input size="20" /></div>
+						</div>
+					</div>
+				</div>			
+			</div>		
+			<!--end columnModifyUI-->
+			<!--start designFlowUI-->
+				<div id="designFlowUI" data-step="3">
+					<h2>3rd Step - Design flow</h2>
+					<div class="recommendDesignFlow">
+						<div class="tabList">
+							<div class="aSelectService">R-1</div>
+							<div class="aSelectService">R-2</div>
+							<div class="aSelectService">R-3</div>
+						</div>
+						<div class="tabContent">
+							<div class="aOverallRecommend" id="R-1">
+								<div class="aLevel">
+									<div>Flights ( Weather Hotels ) : 0.8</div>
+									<div class="aNode">Start</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Flights</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Weather</div>
+									<div class="aNode">Hotel</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">End</div>
+								</div>
+							</div>
+							<div class="aOverallRecommend" id="R-2">
+								<div class="aLevel">
+									<div>( Flights Hotels ) Weather : 0.67</div>
+									<div class="aNode">Start</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Flights</div>									
+									<div class="aNode">Hotel</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Weather</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">End</div>
+								</div>
+							</div>
+							<div class="aOverallRecommend" id="R-3">
+								<div class="aLevel">
+									<div>Flights Hotels Weather : 0.33</div>
+									<div class="aNode">Start</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Flights</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Hotel</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">Weather</div>
+								</div>
+								<div class="aLevel">
+									<div class="aNode">End</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="designFlow">
+						<div class="aLevel">
+							<div class="aNode">
+								<h3>Start</h3>
+							</div>
+							<div class="aLevelMenu">
+								<div class="pattern">
+									<select>
+										<option>Sequence</option>
+										<option>Selection</option>
+										<option>Parallel</option>
+									</select>
+								</div><div class="aPlus">
+									+
+									<div class="menu">
+										<div class="menus">Creat a new level</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--
+						<div class="aLevel">
+							<div class="aNode">
+								<div class="inputs">
+									<h4>Inputs</h4>
+									<div class="aInput"><label>Company</label><input type="checkbox" checked="checked" /></div>
+									<div class="aInput"><label>Date</label><input type="checkbox" checked="checked"/></div>
+									<div class="aInput"><label>Depature</label><input type="checkbox" checked="checked"/></div>
+									<div class="aInput"><label>Arrive</label><input type="checkbox" checked="checked"/></div>
+								</div>
+								<h3>Flights</h3>
+								<div class="outputs">
+									<h4>Outputs</h4>
+									<div class="aOutput"><label>Company</label></div>
+									<div class="aOutput"><label>Date</label></div>
+									<div class="aOutput"><label>Depature</label></div>
+									<div class="aOutput"><label>Arrive</label></div>
+								</div>						
+							</div>
+							<div class="aLevelMenu">
+								<div class="aPlus">+</div>
+							</div>
+						</div>
+						<div class="aLevel">
+							<div class="aNode">
+								<div class="inputs">
+									<h4>Inputs</h4>
+									<div class="aInput"><label>Location</label><input type="checkbox"/></div>
+								</div>
+								<h3>Weather</h3>
+								<div class="outputs">
+									<h4>Outputs</h4>
+									<div class="aOutput"><label>Location</label></div>
+								</div>
+							</div>
+							<div class="aNode">
+								<h4>Recommend services</h4>
+								<select>
+									<option>Hotels</option>
+								</select>
+							</div>
+							<div class="aLevelMenu">
+								<div class="aPlus">+</div>
+							</div>
+						</div>
+						-->
+						<div class="aLevel">
+							<div class="aNode">
+								<h3>End</h3>
+							</div>
+						</div>
+					</div>
+					<div class="designFlowMenu">
+						<div class="aButton" onclick="overallRecommendedService()">
+							See Others' Design...
+						</div>
+						<div class="aButton">
+							I Have Done!
+						</div>
+					</div>
+				</div>		
+			<!--end designFlowUI-->
+			<!--start filterSetupUI-->
+			<div id="filterSetupUI" data-step="4">
+				<h2>4th Step - Filter setup</h2>
+				<div class="filterSetup">
+					<div class="selectServices">
+						<div class="aSelectService">Flights</div>
+						<div class="aSelectService">Weather</div>
+						<div class="aSelectService">Hotels</div>
+					</div>
+					<div class="columns">
+						<div data-service="Flights">
+							<div class="aColumn"><label for="Company">Company</label><input type="checkbox" id="Company" /></div>
+							<div class="aColumn"><label for="Date">Date</label><input type="checkbox" id="Date"/></div>
+							<div class="aColumn"><label for="Depature">Depature</label><input type="checkbox" id="Depature" /></div>
+							<div class="aColumn"><label for="Arrive">Arrive</label><input type="checkbox" id="Arrive"/></div>
+						</div>
+					</div>
+				</div>			
+			</div>		
+			<!--end filterSetupUI-->
+			<!--start mashupSetupUI-->
+			<div id="mashupSetupUI" data-step="5">
+				<h2>5th Step - Mashup setup</h2>
+				<div class="mashupSetup">
+					<div class="selectServices">
+						<div class="aDataSet">DataSet01</div>
+						<div class="plus">+</div>
+					</div>
+					<div class="setups">
+						<div data-dataSet="DataSet01">
+							<div class="setMashupName">
+								<span>Mashup Name:</span>
+								<input size="30" class="setMashupName" />
+							</div>
+							<div class="twoColumns one">
+								<div class="setJoin">
+									<h4>Select two services to join</h4>
+									<div>
+										<label>Flights</label>
+										<select>
+											<option>Company</option>
+											<option>Date</option>
+											<option>Departure</option>
+											<option>Company</option>
+										</select>
+									</div>
+									<div>
+										<label>Weather</label>
+										<select>
+											<option>Company</option>
+											<option>Date</option>
+											<option>Departure</option>
+											<option>Company</option>
+										</select>
+									</div>
+									<div>
+										<label>Hotels</label>
+										<select>
+											<option>Company</option>
+											<option>Date</option>
+											<option>Departure</option>
+											<option>Company</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="twoColumns two">
+								<div class="setOrder">
+									<h4>Set the order</h4>
+									<div>
+										<label>Primary</label>
+										<select>
+											<option>Company</option>
+											<option>Date</option>
+											<option>Departure</option>
+											<option>Company</option>
+										</select>
+									</div>
+									<div>
+										<label>Secondary</label>
+										<select>
+											<option>Company</option>
+											<option>Date</option>
+											<option>Departure</option>
+											<option>Company</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>			
+			</div>		
+			<!--end mashupSetupUI-->
+			<!--start widgetSetupUI-->
+			<div id="widgetSetupUI" data-step="6">
+				<h2>6th Step - Widget Setup</h2>
+				<div class="widgetSetup">
+					<div class="exampleStyle">
+						<h3>Example Style</h3>
+						choose the style you want and show the result here
+					</div>
+					<div class="fontStyle">
+						<h4>Font Style</h4>
+						<div>
+							<label>Family</label>
+							<select>
+								<option>Courier New</option>
+								<option>Courier</option>
+								<option>Verdana</option>
+								<option>Sans-serif</option>
+							</select>
+						</div>
+						<div>
+							<label>Color</label>
+						</div>
+						<div>
+							<label>Size</label>
+						</div>
+						<div>
+							<label>Other</label>
+						</div>
+					</div>
+					<div class="borderStyle">
+						<h4>Border Style</h4>
+						<div>
+							<label>Style</label>
+							<select>
+								<option>Solid</option>
+								<option>Dotted</option>
+								<option>Dashed</option>
+								<option>Double</option>
+							</select>
+						</div>
+						<div>
+							<label>Color</label>
+						</div>
+						<div>
+							<label>Width</label>
+						</div>
+						<div>
+							<label>Radius</label>
+						</div>
+					</div>
+					<div class="backgroundStyle">
+						<h4>Background Style</h4>
+						<div>
+							<label>Color</label>
+						</div>
+						<div>
+							<label>Opacity</label>
+						</div>
+					</div>
+				</div>			
+			</div>		
+			<!--end widgetSetupUI-->
+			<!--start tabSetupUI-->
+			<div id="tabSetupUI" data-step="7">
+				<h2>7th Step - Tabs Setup</h2>
+				<div class="tabSetup">
+					<div class="selectServices">
+						<div class="aTabSet">TabSet01</div>
+						<div class="plus">+</div>
+					</div>
+					<div class="setups">
+						<div data-dataSet="TabSet01">
+							<div class="selectDataSet">
+								<div>
+									<label>DataSet</label>
+									<select>
+										<option>flights-hotels</option>
+									</select>
+								</div>
+								<div>
+									<label>Format</label>
+									<select>
+										<option>Table</option>
+										<option>Google Map</option>
+									</select>
+								</div>
+							</div>
+							<div class="googleMapSetup">
+								<div>
+									<label>Title</label>
+									<select>
+										<option>Company</option>
+										<option>Date</option>
+										<option>Departure</option>
+										<option>Company</option>
+									</select>
+								</div>
+								<div>
+									<label>Location</label>
+									<select>
+										<option>Company</option>
+										<option>Date</option>
+										<option>Departure</option>
+										<option>Company</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>			
+			</div>		
+			<!--end tabSetupUI-->
+			<div id="menu">
+				<div class="box"></div>
+				<div id="menuList">		
+					<div class="goBack" onclick="goBackStep()"></div>
+					<div class="goNext" onclick="goNextStep()"></div>			
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
