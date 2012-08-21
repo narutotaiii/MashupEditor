@@ -2,46 +2,6 @@
  * @author Aminmi
  */
 
-var services = 
-[
-	{
-		'resourceID' : '1',
-		'resourceName' : 'Flights',
-		'resourceType' : 'RESTful',
-		'columNum' : '4',
-		'description' : 'About Flights…',
-		'input' : ['departure','destination'],
-		'output': ['flightname','departure','destination','date']
-	},
-	{
-		'resourceID' : '2',
-		'resourceName' : 'Hotels',
-		'resourceType' : 'RESTful',
-		'columNum' : '4',
-		'description' : 'About Hotels…',
-		'input' : ['adress'],
-		'output': ['hotelname','location','adress','phone']
-	},
-	{
-		'resourceID' : '3',
-		'resourceName' : 'Weather',
-		'resourceType' : 'RESTful',
-		'columNum' : '2',
-		'description' : 'About Weather…',
-		'input' : ['location','date'],
-		'output': ['location','date']
-	},
-	{
-		'resourceID' : '4',
-		'resourceName' : 'Restaurant',
-		'resourceType' : 'RESTful',
-		'columNum' : '3',
-		'description' : 'About Restaurant…',
-		'input' : ['adress'],
-		'output': ['restaurantname','adress','phone']
-	},
-];
-
 function searchService() {
 	/*
 	 * get the input value and then use ajax to
@@ -103,14 +63,14 @@ function searchService() {
 function pickService() {
 	//call associatedRecommendedService
 	associatedRecommendedService( $(this).attr('data-serviceId') );
-	//檢查選取的服務是否重複
+	//check the picked service is not duplicate.
 	var $services = $('#pickedService').children();
 	var currentId = $(this).attr('data-serviceId');
 	var isUnique = true;
 	$.each( $services, function() {
 		var id = $(this).attr('data-serviceId');
 		if( id == currentId ) {
-			alert('您選的服務已經選取過了！');
+			alert('Can\'t pick the same serive!');
 			isUnique = false;
 			return false;
 		}//end if
@@ -120,8 +80,12 @@ function pickService() {
 		return null;
 	}//end if
 	
+	/*
+	 * $.clone( true );
+	 * means that all attributes will totally be cloned.
+	 * see http://api.jquery.com/clone/
+	 */
 	var clone = $(this).clone( true );
-	//var clone = $.extend( {}, $(this) );
 	clone.unbind('click').click( dropService ).appendTo('#pickedService');
 }//end pickService
 
@@ -174,7 +138,7 @@ function associatedRecommendedService( serviceId ) {
 
 function dropService() {
 	/*
-	 * 移除點選的element
+	 * remove the picked service
 	 */
 	$(this).remove();
 }//end dropService
