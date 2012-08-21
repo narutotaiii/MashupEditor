@@ -61,9 +61,10 @@ public class DBConnectionContextListener implements ServletContextListener {
 		try {
 			Class.forName(driver);
 			
-			conn = DriverManager.getConnection(url, user, password);
-			
+			conn = DriverManager.getConnection(url, user, password);			
 			sc.setAttribute("dbConn", conn);
+			sc.setAttribute("user", user);
+			sc.setAttribute("password", password);
 		}
 		catch (SQLException e) {
 			// TODO Auto-generated catch block

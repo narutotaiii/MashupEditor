@@ -65,6 +65,7 @@ function searchService() {
 		scriptCharset: "utf-8" ,
 		success: function(msg) {
 			//alert( msg[0].columnNum );
+			$('#searchResult').text("");
 			$.each( msg, function() {
 				$('<div/>', {
 					"class": "aService",
@@ -97,7 +98,6 @@ function searchService() {
 			alert('FAIL');
 		},
 	});
-	$('#searchResult').text("");
 	
 }//end searchService
 
@@ -114,44 +114,52 @@ function pickService() {
 	associatedRecommendedService( $(this).attr('data-serviceId') );
 }//end pickService
 
-function associatedRecommendedService( o ) {
-	/*
-	 * 把data-serviceId藉由ajax的技術傳給servlet
-	 * 把回傳後的結果放到#recommendService裡面
-	 * 每個.aService按了都會觸發pickService()
-	 * 以及associatedRecommendedService()
-	 */
-	$('#recommendService').text("");
-	$.each( services, function() {
-		if( o == this.resourceID ) {
-			return null;
-		}
-		$('<div/>', {
-			"class": "aService",
-			"data-serviceId": this.resourceID,
-			click: pickService
-		})
-		.append(
-			$('<span>',{
-				"class": "serviceName",
-				text: this.resourceName
-			}),
-			$('<span>',{
-				"class": "serviceType",
-				text: this.resourceType
-			}),
-			$('<span>',{
-				"class": "columNum",
-				text: this.columNum
-			}),
-			$('<span>',{
-				"class": "description",
-				text: this.description
-			})
-		)
-		.appendTo('#recommendService');
-	});
-	
+function associatedRecommendedService( serviceId ) {
+	//ajax
+	$.ajax({
+		type: 'POST',
+		url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
+		data: {
+				service: 'relationalRecommand',
+				data: serviceId
+			},
+		dataType: "json",
+		scriptCharset: "utf-8" ,
+		success: function(msg) {
+			$('#recommendService').text("");
+			//alert( msg[0].columnNum );
+			$.each( msg, function() {
+				$('<div/>', {
+					"class": "aService",
+					"data-serviceId": this.resourceID,
+					click: pickService
+				})
+				.append(
+					$('<span>',{
+						"class": "serviceName",
+						text: this.resourceName
+					}),
+					$('<span>',{
+						"class": "serviceType",
+						text: this.resourceType
+					}),
+					$('<span>',{
+						"class": "columNum",
+						text: this.columnNum
+					}),
+					$('<span>',{
+						"class": "description",
+						text: this.description,
+						title: this.description
+					})
+				)
+				.appendTo('#recommendService');
+			});
+		},
+		error: function() {
+			alert('FAIL');
+		},
+	});//end ajax
 }//end associatedRecommendedService
 
 function dropService() {

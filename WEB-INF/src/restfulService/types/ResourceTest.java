@@ -17,7 +17,7 @@ public class ResourceTest {
 		ResourceOrder order = null;
 		//ServiceProcess run = new ServiceProcess("01");
 		//DataComposition run = new DataComposition("01");
-		WidgetDesign run = new WidgetDesign("01");
+		//WidgetDesign run = new WidgetDesign("01");
 		String data = "[{resourceName:START,from:[root],to:[A, B],pattern:parallel,input:[]},{resourceName:A,from:[START],"
 			+"to: [END],pattern: sequence,input:[name,date]},{resourceName: B,from:[START],to:[END],pattern: sequence,"
 			+"input:[name,date]}]";
@@ -34,7 +34,7 @@ public class ResourceTest {
 			//System.out.println(oder.searchResource(query));
 			//System.out.println(order.chooseResource(query2));
 			//System.out.println(run.changeProcessExpression(data));
-			System.out.println(run.produce(data3));
+			System.out.println(order.searchResource(query));
 			
 		}
 		catch(Exception e) {

@@ -9,7 +9,7 @@ public class ResourceInfo
 	private int resourceID;//resourceID
 	private String resourceName;//resource名稱
 	private String resourceType;//resource類型
-	private int clumnNum;//欄位數量
+	private int columnNum;//欄位數量
 	private String description;//服務描述
 	private String url;//取得服務的url
 	
@@ -19,7 +19,7 @@ public class ResourceInfo
 		resourceID = id;
 		resourceName = name;
 		resourceType =type;
-		clumnNum = num;
+		columnNum = num;
 		description = str;
 		this.url = url;
 	}
@@ -32,7 +32,7 @@ public class ResourceInfo
 			case 0 : resourceID = Integer.parseInt(data);break;
 			case 1 : resourceName = data;break;
 			case 2 : resourceType = data;break;
-			case 3 : clumnNum = Integer.parseInt(data);break;
+			case 3 : columnNum = Integer.parseInt(data);break;
 			case 4 : description = data;break;
 			case 5 : url = data;break;
 		}
@@ -51,9 +51,9 @@ public class ResourceInfo
 	{
 		return resourceType;
 	}
-	public int getClumnNum()
+	public int getColumnNum()
 	{
-		return clumnNum;
+		return columnNum;
 	}
 	public String getDescription()
 	{

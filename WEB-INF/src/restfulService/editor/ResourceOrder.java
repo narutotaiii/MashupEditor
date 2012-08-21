@@ -1,6 +1,8 @@
 package restfulService.editor;
 import restfulService.types.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 import java.sql.*;
 import org.json.*;
 
@@ -80,5 +82,17 @@ public class ResourceOrder {
 		{
 			return resourceList;
 		}		
+	}
+	public JSONArray relationalRecommand(Set<String> services)
+	{
+		Iterator it = services.iterator();
+		JSONArray recommandList = new JSONArray();
+		//String condition = null;
+		while( it.hasNext() ) {
+			//condition = "resource_name ='"+ (String)it.next() +"'";
+			recommandList.put(new JSONObject(run.find((String)it.next())));
+		}
+		return recommandList;
+		
 	}
 }

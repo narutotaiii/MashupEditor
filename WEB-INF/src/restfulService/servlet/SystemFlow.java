@@ -6,35 +6,35 @@ import java.io.*;
 import java.net.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import restfulService.editor.*;
+import mashup.*;
 
 public class SystemFlow extends HttpServlet
 {	
 	public void doPost(HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException
 	{		
 		request.setCharacterEncoding("UTF-8");
-		//response.setCharacterEncoding("utf8");
+		response.setCharacterEncoding("UTF-8");
+		PrintWriter out = response.getWriter();
 		RequestDispatcher display;
 		HttpSession session=request.getSession();
-		Connection conn =  (Connection) getServletContext().getAttribute("dbConn");//¨ú±oDB¸ê°T
+		Connection conn =  (Connection) getServletContext().getAttribute("dbConn");//å–å¾—DBè³‡è¨Š
 		ResourceOrder run = new ResourceOrder(conn);
+		
 		MashupDocumentProduce editor = null;
 		String query = null;
-		String data = null;
-		PrintWriter out = null;
-		if(request.getParameter("service").equals("search"))//·j´M¤@³¡¹q¼v¸ê°T¥\¯à
+		String data = null;		
+		if(request.getParameter("service").equals("search"))//æœå°‹æœå‹™è³‡æºåŠŸèƒ½
 		{				
-			query = "{queryKey:'"+request.getParameter("query")+"'}";//¨ú±oÃöÁä¦r
-			//±Nµ²ªGÂà¬°String«¬ºA¡A¨ÃÀx¦s
-			out = response.getWriter();
-			out.print(run.searchResource(query));
-			//display = request.getRequestDispatcher("correct.jsp");//¾É¤J­¶­±
-			//display.forward(request, response);
+			query = "{queryKey:'"+request.getParameter("query")+"'}";//å–å¾—é—œéµå­—
+			out.print(run.searchResource(query));//å°‡çµæœå‚³å…¥å‰ç«¯	
 		}
 		else if(request.getParameter("service").equals("choose"))
 		{
-			query = request.getParameter("resources");			
-			out = response.getWriter();
+			query = request.getParameter("resources");
 			out.print(run.chooseResource(query));
 		}
 		else if(request.getParameter("service").equals("fieldNameChnanged"))
@@ -67,11 +67,55 @@ public class SystemFlow extends HttpServlet
 			WidgetDesign document = new WidgetDesign("01");
 			document.produceWidgetSetup(data);			
 		}
+		else if(request.getParameter("service").equals("relationalRecommand"))
+		{
+			data = request.getParameter("data");
+			System.out.println(data);
+			try 
+			{				
+				Recommender recommand = new Recommender( (String) getServletContext().getAttribute("user"), (String) getServletContext().getAttribute("password") , "services" );
+				Set<String> services = recommand.recommend( data , 2 );
+				out.println(run.relationalRecommand(services));
+			}
+			catch (Exception e) 
+			{				
+				e.printStackTrace();
+			}			
+		}
+		else if(request.getParameter("service").equals("patternRecommand"))
+		{
+			data = request.getParameter("data");
+			try 
+			{				
+				SPRecommender recommander = new SPRecommender( CombinationCategory.Selection );
+				List<String> services = recommander.recommend( data , 2 );
+				getServletContext().setAttribute("recommandServices", services);
+			}
+			catch (Exception e) 
+			{				
+				e.printStackTrace();
+			}
+					
+		}
+		else if(request.getParameter("service").equals("overallRecommand"))
+		{
+			data = request.getParameter("data");
+			OverallRecommend recommander;
+			try 
+			{
+				recommander = new OverallRecommend();
+				List<WeightedSimpleMashup> mashups = recommander.recommend( data , 2);
+			}
+			catch (Exception e) 
+			{				
+				e.printStackTrace();
+			}			
+						
+		}
 		
 	}
 	public void doGet(HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException
 	{
 		response.sendRedirect("index.jsp");
-	}
-	
+	}	
 }

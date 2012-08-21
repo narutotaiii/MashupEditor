@@ -26,7 +26,7 @@ public class ResourceDAO extends AbstractDAO<ResourceInfo>{
 			rs = stmt.executeQuery(queryStr);
 			if (rs.next()) {
 				result = new ResourceInfo(rs.getInt("resource_id"), rs.getString("resource_name"),
-						  rs.getString("resource_type"), rs.getInt("clumnNum"),
+						  rs.getString("resource_type"), rs.getInt("columnNum"),
 						  rs.getString("description"),  rs.getString("url"));
 			}
 		}
@@ -55,7 +55,7 @@ public class ResourceDAO extends AbstractDAO<ResourceInfo>{
 				ResourceInfo tmpResource = new ResourceInfo(resourceID, 
 										rs.getString("resource_name"),
 										rs.getString("resource_type"), 									 
-										rs.getInt("clumnNum"), 
+										rs.getInt("columnNum"), 
 										rs.getString("description"),
 										rs.getString("url")
 										);
@@ -111,9 +111,9 @@ public class ResourceDAO extends AbstractDAO<ResourceInfo>{
 	public synchronized boolean insert(ResourceInfo obj) {//新增resource資訊
 		Statement stmt = null;
 		String queryStr = "INSERT INTO " + table + 
-						  "(resource_name,resource_type,clumnNum,description)VALUES('" +
+						  "(resource_name,resource_type,columnNum,description)VALUES('" +
 						  obj.getResourceName() + "','" + obj.getResourceType() + "','" + 
-						  obj.getClumnNum() + "','" + obj.getDescription() + "')";
+						  obj.getColumnNum() + "','" + obj.getDescription() + "')";
 
 		//System.out.println(queryStr);
 		
