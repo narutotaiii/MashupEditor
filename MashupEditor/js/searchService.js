@@ -64,7 +64,6 @@ function searchService() {
 		dataType: "json",
 		scriptCharset: "utf-8" ,
 		success: function(msg) {
-			//alert( msg[0].columnNum );
 			$('#searchResult').text("");
 			$.each( msg, function() {
 				$('<div/>', {
@@ -95,23 +94,35 @@ function searchService() {
 			});
 		},
 		error: function() {
-			alert('FAIL');
+			alert('ajax:search failed');
 		},
 	});
 	
 }//end searchService
 
 function pickService() {
-	/*
-	 * 會把點選到的element複製到#pickedService
-	 * 也會檢查裡面有沒有相同的服務data-serviceId
-	 * 有的話就不加入到#pickedService裡面
-	 * 並且放進來的.aService的onclick會改成dropService()
-	 */
-	var clone = $(this).clone();
-	clone.click( dropService ).appendTo('#pickedService');
-	
+	//call associatedRecommendedService
 	associatedRecommendedService( $(this).attr('data-serviceId') );
+	//檢查選取的服務是否重複
+	var $services = $('#pickedService').children();
+	var currentId = $(this).attr('data-serviceId');
+	var isUnique = true;
+	$.each( $services, function() {
+		var id = $(this).attr('data-serviceId');
+		if( id == currentId ) {
+			alert('您選的服務已經選取過了！');
+			isUnique = false;
+			return false;
+		}//end if
+	});//end each
+	
+	if( !isUnique ) {
+		return null;
+	}//end if
+	
+	var clone = $(this).clone( true );
+	//var clone = $.extend( {}, $(this) );
+	clone.unbind('click').click( dropService ).appendTo('#pickedService');
 }//end pickService
 
 function associatedRecommendedService( serviceId ) {
@@ -127,7 +138,6 @@ function associatedRecommendedService( serviceId ) {
 		scriptCharset: "utf-8" ,
 		success: function(msg) {
 			$('#recommendService').text("");
-			//alert( msg[0].columnNum );
 			$.each( msg, function() {
 				$('<div/>', {
 					"class": "aService",
@@ -157,7 +167,7 @@ function associatedRecommendedService( serviceId ) {
 			});
 		},
 		error: function() {
-			alert('FAIL');
+			alert('ajax:relationalRecommand failed');
 		},
 	});//end ajax
 }//end associatedRecommendedService
