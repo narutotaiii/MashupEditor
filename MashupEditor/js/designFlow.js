@@ -153,6 +153,7 @@ function collectService() {
 			$('<div/>', {
 				'class': 'choose',
 				text: this.resourceName,
+				'data-serviceid': this.resourceID,
 				click: insertService
 			})
 		);
@@ -166,9 +167,11 @@ function insertService() {
 	var $level = $(this).parent().parent().parent().parent().parent().parent();
 	
 	var t = $(this).text();
+	var id = $(this).attr('data-serviceId');
 	
 	$('<div/>', {
-		'class': 'aNode'
+		'class': 'aNode',
+		'data-serviceid': id
 	})
 	.append(
 		$('<h3/>', {
@@ -183,3 +186,86 @@ function insertService() {
 $(function() {
 	$('.aPlus .menu div:first-child').click( createNewLevel );
 });
+
+function getDesignFlow() {
+	/*
+	 * collect all data of design flow
+	 * and use ajax technique to POST
+	 * to servlet
+	 */
+	
+	/*
+	{
+		resourceName: ‘A’,
+		from: [‘START’],
+		to: [‘SELECT’],
+		pattern: ‘sequence’,
+		input: []
+	}
+	 */
+	var $levels = $('div.designFlow').children();
+	var designFlowData = [];
+	$.each( $levels, function() {
+		 var $nodes = $(this).find('.aNode');
+		 //new a JSON object
+		 var nodes = {};
+		 var data = [];
+		 
+		 $.each( $nodes, function() {
+		 	data.push( $(this).find('h3').text() );
+		 });
+		 nodes.resourceName = data;
+		 
+		 //from
+		 var preData = [];
+		 var $prevNodes = $(this).prev().find('.aNode');
+		 $.each( $prevNodes, function() {
+		 	preData.push( $(this).find('h3').text() );
+		 });
+		 nodes.from = preData;
+		 
+		 //to
+		 var nextData = [];
+		 var $nextNodes = $(this).next().find('.aNode');
+		 $.each( $nextNodes, function() {
+		 	nextData.push( $(this).find('h3').text() );
+		 });
+		 nodes.to = nextData;
+		 
+		 //pattern
+		 var pattern = $(this).find('.aLevelMenu .pattern select').val();
+		 if( pattern != undefined ) {
+		 	nodes.pattern = pattern;
+		 }//end if
+		 
+		 //input
+		 nodes.input = ['departure','destination'];
+		 
+		 designFlowData.push( nodes );
+		 
+	});//end each
+	alert( JSON.stringify( designFlowData ) );
+	
+	uploadDesignFlow( designFlowData );
+}//end getDesignFlow
+
+function uploadDesignFlow( uploadData ) {
+	$.ajax({
+		type: 'POST',
+		url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
+		data: {
+				service: 'flowSetup',
+				data: JSON.stringify( uploadData )
+			},
+		dataType: "json",
+		scriptCharset: "utf-8",
+		//contentType: "application/json; charset=utf-8",
+		//traditional: true,
+		success: function(msg) {
+			alert( JSON.stringify(msg) );
+		},
+		error: function() {
+			alert('ajax:uploadDesignFlow failed');
+		}
+	});//end ajax
+}

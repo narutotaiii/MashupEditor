@@ -132,7 +132,7 @@ function associatedRecommendedService( serviceId ) {
 		},
 		error: function() {
 			alert('ajax:relationalRecommand failed');
-		},
+		}
 	});//end ajax
 }//end associatedRecommendedService
 
