@@ -63,7 +63,7 @@ function createNewLevel() {
 			'class': 'aLevelMenu'
 		})
 		.append(
-			$('<div class="pattern">'+'<select>'+'<option>Sequence</option><option>Selection</option>'+'<option>Parallel</option>'+'</select>'+'</div>'),
+			$('<div class="pattern">'+'<select>'+'<option>sequence</option><option>selection</option>'+'<option>parallel</option>'+'</select>'+'</div>'),
 			$('<div/>', {
 				'class':'aPlus',
 				text: '+'
@@ -206,45 +206,46 @@ function getDesignFlow() {
 	var $levels = $('div.designFlow').children();
 	var designFlowData = [];
 	$.each( $levels, function() {
-		 var $nodes = $(this).find('.aNode');
-		 //new a JSON object
-		 var nodes = {};
-		 var data = [];
-		 
-		 $.each( $nodes, function() {
-		 	data.push( $(this).find('h3').text() );
-		 });
-		 nodes.resourceName = data;
-		 
-		 //from
-		 var preData = [];
-		 var $prevNodes = $(this).prev().find('.aNode');
-		 $.each( $prevNodes, function() {
-		 	preData.push( $(this).find('h3').text() );
-		 });
-		 nodes.from = preData;
-		 
-		 //to
-		 var nextData = [];
-		 var $nextNodes = $(this).next().find('.aNode');
-		 $.each( $nextNodes, function() {
-		 	nextData.push( $(this).find('h3').text() );
-		 });
-		 nodes.to = nextData;
-		 
-		 //pattern
-		 var pattern = $(this).find('.aLevelMenu .pattern select').val();
-		 if( pattern != undefined ) {
-		 	nodes.pattern = pattern;
-		 }//end if
-		 
-		 //input
-		 nodes.input = ['departure','destination'];
-		 
-		 designFlowData.push( nodes );
-		 
+		var $nodes = $(this).find('.aNode');
+		$.each( $nodes, function() {
+			//new a JSON object
+			var nodes = {};
+			nodes.resourceName = $(this).find('h3').text();
+			//data.push( $(this).find('h3').text() );
+			
+			//from
+			var preData = [];
+			var $prevNodes = $(this).parent().prev().find('.aNode');
+			$.each( $prevNodes, function() {
+				preData.push( $(this).find('h3').text() );
+			});
+			nodes.from = preData;
+			
+			//to
+			var nextData = [];
+			var $nextNodes = $(this).parent().next().find('.aNode');
+			$.each( $nextNodes, function() {
+				nextData.push( $(this).find('h3').text() );
+			});
+			nodes.to = nextData;
+			
+			//pattern
+			var pattern = $(this).parent().find('.aLevelMenu .pattern select').val();
+			if( pattern != undefined ) {
+				nodes.pattern = pattern;
+			}
+			else {
+				nodes.pattern = "";
+			}//end else if
+			
+			//input
+			nodes.input = ['departure','destination'];
+					
+			designFlowData.push( nodes );
+		});		 
 	});//end each
-	alert( JSON.stringify( designFlowData ) );
+	//alert( JSON.stringify( designFlowData ) );
+	//$('div#log').text("").text( JSON.stringify( designFlowData ) );
 	
 	uploadDesignFlow( designFlowData );
 }//end getDesignFlow
@@ -262,7 +263,7 @@ function uploadDesignFlow( uploadData ) {
 		//contentType: "application/json; charset=utf-8",
 		//traditional: true,
 		success: function(msg) {
-			alert( JSON.stringify(msg) );
+			//alert( JSON.stringify(msg) );
 		},
 		error: function() {
 			alert('ajax:uploadDesignFlow failed');
