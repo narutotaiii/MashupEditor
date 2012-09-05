@@ -2,36 +2,7 @@
  * @author Aminmi
  */
 
-var selectServices = 
-[
-	{
-		'resourceID' : '1',
-		'resourceName' : 'Flights',
-		'resourceType' : 'RESTful',
-		'columNum' : '4',
-		'description' : 'About Flights…',
-		'input' : ['departure','destination'],
-		'output': ['flightname','departure','destination','date']
-	},
-	{
-		'resourceID' : '2',
-		'resourceName' : 'Hotels',
-		'resourceType' : 'RESTful',
-		'columNum' : '4',
-		'description' : 'About Hotels…',
-		'input' : ['adress'],
-		'output': ['hotelname','location','adress','phone']
-	},
-	{
-		'resourceID' : '3',
-		'resourceName' : 'Weather',
-		'resourceType' : 'RESTful',
-		'columNum' : '2',
-		'description' : 'About Weather…',
-		'input' : ['location','date'],
-		'output': ['location','date']
-	}
-];
+var selectServices;
 
 function overallRecommendedService() {
 	$('.recommendDesignFlow').fadeToggle();
@@ -96,33 +67,22 @@ function createNewLevel() {
 }
 
 function parallelRecommend() {
-		/*
-<div class="aLevel">
-	<div class="aNode">
-		<h3>Start</h3>
-	</div>
-	<div class="aLevelMenu">
-		<div class="pattern">
-			<select>
-				<option>Sequence</option>
-				<option>Parallel</option>
-			</select>
-		</div>
-		<div class="aPlus">
-			+
-			<div class="menu">
-				<div>Creat a new level</div>
-				<div>Insert a service</div>
-				<div>Parallel Recommend</div>
-			</div>
-		</div>
-	</div>
-</div>
-	 */
 	var $level = $(this).parent().parent().parent().parent();
+	$level.find('.aRecommend')
+	.fadeOut( 'fast',function() {
+		$(this).remove();
+	});
+	//alert( $level.find('.aNode').length );
+	
+	/*
+	 * Get aNodes in the level and send request
+	 * by ajax.
+	 * 
+	 * List the recommend for user to choose
+	 */
 	
 	$('<div/>', {
-		'class': 'aNode'
+		'class': 'aRecommend'
 	})
 	.append(
 		$('<h4/>', {
@@ -138,15 +98,58 @@ function parallelRecommend() {
 			})
 		)
 	)
+	.append(
+		$('<div>', {
+			'class': 'closeButton',
+			click: removeService,
+			title: 'Remove this item'
+		})
+	)
 	.appendTo($level);
 }
 
 function collectService() {
-	
+	var $services = $('.pickedService').children().find('.aService');
+	//if there is no picked service, end this method
+	if( !$services.length ) {
+		alert('You have to choose some services.');
+		return null;
+	}
+	//if the list exists, end this method
 	if( $(this).find('div').length ) {
 		return null;
 	}
 	var $nodes = $('<div/>');
+	
+	//collectionService from .pickedService
+	//and collect their ID to get input/output by ajax
+	if( selectServices == null ) {
+		var serviceId = [];
+		$.each( $services, function() {
+			var id = {};
+			id.resourceID = $(this).attr('data-serviceId');
+			serviceId.push( id );
+		});
+		//$('div#log').text("").text( JSON.stringify( serviceId ) );
+		$.ajax({
+			type: 'POST',
+			url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
+			data: {
+					service: 'choose',
+					resources: JSON.stringify( serviceId )
+				},
+			dataType: "json",
+			scriptCharset: "utf-8",
+			success: function(msg) {
+				//alert( JSON.stringify(msg) );
+				selectServices = msg;
+			},
+			error: function() {
+				alert('ajax:collectService failed');
+			}
+		});		
+	}
+	
 	
 	$.each( selectServices , function() {
 		$nodes.append(
@@ -154,6 +157,8 @@ function collectService() {
 				'class': 'choose',
 				text: this.resourceName,
 				'data-serviceid': this.resourceID,
+				'data-input': this.input,
+				'data-output': this.output,
 				click: insertService
 			})
 		);
@@ -165,22 +170,56 @@ function collectService() {
 
 function insertService() {
 	var $level = $(this).parent().parent().parent().parent().parent().parent();
-	
 	var t = $(this).text();
-	var id = $(this).attr('data-serviceId');
+	var currentId = $(this).attr('data-serviceId');
+	
+	//check the chose service is not duplicate.
+	var $nodes = $level.find('.aNode');
+	var isUnique = true;	
+	$.each( $nodes, function() {
+		var id = $(this).attr('data-serviceId');
+		if( id == currentId ) {
+			alert('Can\'t choose the service twice in a level!');
+			isUnique = false;
+			return false;
+		}//end if
+	});//end each
+	
+	if( !isUnique ) {
+		return null;
+	}//end if
+	
+	var input = $(this).attr('data-input');
+	var output = $(this).attr('data-output');
 	
 	$('<div/>', {
 		'class': 'aNode',
-		'data-serviceid': id
+		'data-serviceid': currentId,
+		'data-input': input,
+		'data-output': output,
 	})
 	.append(
 		$('<h3/>', {
 			text: t
 		})
 	)
+	.append(
+		$('<div>', {
+			'class': 'closeButton',
+			click: removeService,
+			title: 'Remove this service'
+		})
+	)
+	.append(
+		$('<div>', {
+			'class': 'questionButton',
+			click: seeDetail,
+			title: 'See detail'
+		})
+	)
 	.appendTo($level);
 	
-	$(this).remove();
+	//$(this).remove();
 }//end insertService
 
 $(function() {
@@ -194,16 +233,20 @@ function getDesignFlow() {
 	 * to servlet
 	 */
 	
-	/*
-	{
-		resourceName: ‘A’,
-		from: [‘START’],
-		to: [‘SELECT’],
-		pattern: ‘sequence’,
-		input: []
-	}
-	 */
+	//clean empty level
 	var $levels = $('div.designFlow').children();
+	$.each( $levels, function() {
+		 var isEmpty = $(this).find('.aNode').length ? false : true;
+		 if( isEmpty ) {
+		 	$(this).remove();
+		 }//end if
+		 
+		 var $recommend = $(this).find('.aRecommend');
+		 $.each( $recommend, function() {
+		 	$(this).remove();
+		 });//end each
+	});//end each
+	
 	var designFlowData = [];
 	$.each( $levels, function() {
 		var $nodes = $(this).find('.aNode');
@@ -239,7 +282,13 @@ function getDesignFlow() {
 			}//end else if
 			
 			//input
-			nodes.input = ['departure','destination'];
+			
+			var data = $(this).attr('data-input');
+			var input = [];
+			if( data != undefined ) {
+				input = data.split(",");
+			}
+			nodes.input = input;
 					
 			designFlowData.push( nodes );
 		});		 
@@ -263,10 +312,29 @@ function uploadDesignFlow( uploadData ) {
 		//contentType: "application/json; charset=utf-8",
 		//traditional: true,
 		success: function(msg) {
-			//alert( JSON.stringify(msg) );
+			//$('div#log').text("").text( JSON.stringify( msg ) );
 		},
 		error: function() {
 			alert('ajax:uploadDesignFlow failed');
 		}
 	});//end ajax
+}//end uploadDesignFlow
+
+function removeService() {
+	$(this)
+	.parent()
+	.fadeOut( 'slow',
+		function() {
+			$(this).remove();
+		}
+	);
+}//end removeService
+
+function seeDetail() {
+	var $node = $(this).parent();
+	var detail = "";
+	detail += $node.attr('data-serviceId') + "\n";
+	detail += $node.attr('data-input') + "\n";
+	detail += $node.attr('data-output') + "\n";
+	alert( detail );
 }

@@ -47,7 +47,9 @@ public class SystemFlow extends HttpServlet
 		{
 			data = request.getParameter("data");
 			editor = new ServiceProcess("01");
-			editor.produce(data);			
+			System.out.println(data);
+			editor.produce(data);
+			out.print(data);
 		}
 		else if(request.getParameter("service").equals("mashupSetup"))
 		{
@@ -87,9 +89,7 @@ public class SystemFlow extends HttpServlet
 			data = request.getParameter("data");
 			try 
 			{				
-				SPRecommender recommander = new SPRecommender( CombinationCategory.Selection );
-				List<String> services = recommander.recommend( data , 2 );
-				getServletContext().setAttribute("recommandServices", services);
+				out.println(run.patternRecommand(data));
 			}
 			catch (Exception e) 
 			{				

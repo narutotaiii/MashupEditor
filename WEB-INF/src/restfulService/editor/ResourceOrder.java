@@ -2,9 +2,13 @@ package restfulService.editor;
 import restfulService.types.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.sql.*;
+
 import org.json.*;
+
+import mashup.*;
 
 public class ResourceOrder {
 	private ResourceDAO run;//°õ¦æSQL«ü¥O
@@ -93,6 +97,48 @@ public class ResourceOrder {
 			recommandList.put(new JSONObject(run.find((String)it.next())));
 		}
 		return recommandList;
+		
+	}
+	public JSONArray patternRecommand(String data) 
+	{		
+		String rid = null;
+		JSONArray recommandServices = new JSONArray();
+		List<String> recommandList = null;		
+		try
+		{
+			JSONArray services = new JSONArray(data);			
+			SPRecommender recommander = new SPRecommender( CombinationCategory.Selection );				
+			//System.out.println(services.getJSONObject(0).toString());
+			for(int i = 0 ; i < services.length() ; i++)
+			{
+				rid = services.getJSONObject(i).getString("resourceID");
+				//System.out.println(rid);
+				recommandList = recommander.recommend( rid , 2 );
+				for(int index = 0 ; index < recommandList.size() ; index++)
+				{					
+					recommandServices.put(new JSONObject(run.find(recommandList.get(index))));					
+				}
+			}
+			//System.out.println(recommandServices.length());
+			for(int j = 0 ; j < recommandServices.length() ; j++)
+			{
+				for(int k = 0 ; k < j ; k++ )
+				{					
+					if(recommandServices.getJSONObject(k).getString("resourceName").equals(recommandServices.getJSONObject(j).getString("resourceName")))
+					{						
+						recommandServices.remove(j);
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.getStackTrace();
+		}
+		finally
+		{
+			return recommandServices;
+		}	
 		
 	}
 }

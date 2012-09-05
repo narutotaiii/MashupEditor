@@ -386,7 +386,7 @@ div.aLevel {
 	position: relative;
 }
 
-div.aNode {
+div.aNode,div.aRecommend {
 	border-radius: 20px;
 	border: 1px solid #ccc;
 	background-color: #eee;
@@ -394,7 +394,8 @@ div.aNode {
 	display: inline-block;
 	margin: auto;
 	padding: 5px;
-	vertical-align: top;
+	vertical-align: top;	
+	position: relative;
 }
 
 div.aLevelMenu {
@@ -548,4 +549,32 @@ div.choose {
 
 div.choose:hover {
 	background-color: #ccc;
+}
+
+div.closeButton {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background-image: url('img/closeButton.png');
+	right: 10px;
+	top: 10px;
+}
+
+div.closeButton:hover,div.questionButton:hover {
+	cursor: pointer;
+}
+
+div.closeButton:active,div.questionButton:active {
+	transform: translate(2px,2px);
+	-moz-transform: translate(2px,2px); /* Firefox */
+	-webkit-transform: translate(2px,2px); /* Safari and Chrome */
+}
+
+div.questionButton {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background-image: url('img/questionButton.png');
+	right: 30px;
+	top: 10px;
 }
