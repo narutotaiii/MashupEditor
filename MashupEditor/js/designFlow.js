@@ -5,6 +5,29 @@
 var selectServices;
 
 function overallRecommendedService() {
+	
+	var uploadData = getDesignFlow();
+	//$('div#log').text("").text( JSON.stringify( uploadData ) );
+	$.ajax({
+		type: 'POST',
+		url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
+		data: {
+				service: 'overallRecommend',
+				data: JSON.stringify( uploadData )
+			},
+		dataType: "json",
+		scriptCharset: "utf-8",
+		//contentType: "application/json; charset=utf-8",
+		//traditional: true,
+		success: function(msg) {
+			alert( JSON.stringify( msg ) );
+			//$('div#log').text("").text( JSON.stringify( msg ) );
+		},
+		error: function() {
+			alert('ajax:overallRecommendedService failed');
+		}
+	});//end ajax
+	/*
 	$('.recommendDesignFlow').fadeToggle();
 	$('.recommendDesignFlow .aOverallRecommend:first-child')
 	.stop(false, true)
@@ -21,6 +44,7 @@ function overallRecommendedService() {
 			.siblings()
 			.hide();
 	})
+	*/
 }//end overallRecommendedService
 
 function createNewLevel() {
@@ -64,7 +88,53 @@ function createNewLevel() {
 		)
 	)
 	.insertAfter($level);
-}
+}//end createNewLevel
+
+function createNewNode( $target, name, id, input, output) {
+	
+	//check the chose service is not duplicate.
+	var $nodes = $target.find('.aNode');
+	var isUnique = true;	
+	$.each( $nodes, function() {
+		var thisServiceId = $(this).attr('data-serviceId');
+		if( thisServiceId == id ) {
+			alert('Can\'t choose the service twice in a level!');
+			isUnique = false;
+			return false;
+		}//end if
+	});//end each
+	
+	if( !isUnique ) {
+		return null;
+	}//end if
+	
+	$('<div/>', {
+		'class': 'aNode',
+		'data-serviceid': id,
+		'data-input': input,
+		'data-output': output,
+	})
+	.append(
+		$('<h3/>', {
+			text: name
+		})
+	)
+	.append(
+		$('<div>', {
+			'class': 'closeButton',
+			click: removeService,
+			title: 'Remove this service'
+		})
+	)
+	.append(
+		$('<div>', {
+			'class': 'questionButton',
+			click: seeDetail,
+			title: 'See detail'
+		})
+	)
+	.appendTo($target);
+}//end createNewNode
 
 function parallelRecommend() {
 	var $level = $(this).parent().parent().parent().parent();
@@ -81,31 +151,86 @@ function parallelRecommend() {
 	 * List the recommend for user to choose
 	 */
 	
-	$('<div/>', {
-		'class': 'aRecommend'
-	})
-	.append(
-		$('<h4/>', {
-			text: 'Recommend services'
-		}),
-		$('<select/>')
-		.append(
-			$('<option/>', {
-				text: 'Hotels'
-			}),
-			$('<option/>', {
-				text: 'Restaurant'
+	var $nodes = $level.find('.aNode');
+	if( !$nodes.length ) {
+		alert('You have to insert other service first!');
+		return null;
+	}
+	var nodeList = [];
+	$.each( $nodes, function() {
+		var id = {};
+		id.resourceID = $(this).attr('data-serviceId');
+		nodeList.push( id );
+	});//end each
+	
+	//alert( JSON.stringify( nodeList ) );
+	
+	
+	
+	var recommendService;
+	$.ajax({
+		type: 'POST',
+		url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
+		data: {
+				service: 'patternRecommend',
+				data: JSON.stringify( nodeList )
+			},
+		dataType: "json",
+		scriptCharset: "utf-8",
+		success: function(msg) {
+			//alert( JSON.stringify(msg) );
+			if( !$(msg).length ) {
+				alert('No recommend!');
+				return null;
+			}
+			var $select = $('<select/>');
+			$select.append(
+				$('<option/>',{
+					text: 'Choose a service'
+				})
+			);
+			
+			$.each( msg, function() {
+				var $option = $('<option/>',{
+								text: this.resourceName,
+								'data-serviceId': this.resourceID,
+								'data-input': this.input,
+								'data-output': this.output
+							});
+				$select.append( $option );
+			});
+			
+			$select.change(function() {
+				var name = $(this).find('option:selected').text();
+				var id = $(this).find('option:selected').attr('data-serviceId');
+				var input = $(this).find('option:selected').attr('data-input');
+				var output = $(this).find('option:selected').attr('data-output');
+				createNewNode( $level, name, id, input, output );
+				$(this).parent().remove();
+			});
+			
+			$('<div/>', {
+				'class': 'aRecommend'
 			})
-		)
-	)
-	.append(
-		$('<div>', {
-			'class': 'closeButton',
-			click: removeService,
-			title: 'Remove this item'
-		})
-	)
-	.appendTo($level);
+			.append(
+				$('<h4/>', {
+					text: 'Recommend services'
+				}),
+				$select
+			)
+			.append(
+				$('<div>', {
+					'class': 'closeButton',
+					click: removeService,
+					title: 'Remove this item'
+				})
+			)
+			.appendTo($level);
+		},
+		error: function() {
+			alert('ajax:parallelRecommend failed');
+		}
+	});
 }
 
 function collectService() {
@@ -116,7 +241,8 @@ function collectService() {
 		return null;
 	}
 	//if the list exists, end this method
-	if( $(this).find('div').length ) {
+	var $list = $(this);
+	if( $list.find('div').length ) {
 		return null;
 	}
 	var $nodes = $('<div/>');
@@ -142,82 +268,35 @@ function collectService() {
 			scriptCharset: "utf-8",
 			success: function(msg) {
 				//alert( JSON.stringify(msg) );
-				selectServices = msg;
+				$.each( msg , function() {
+					$nodes.append(
+						$('<div/>', {
+							'class': 'choose',
+							text: this.resourceName,
+							'data-serviceid': this.resourceID,
+							'data-input': this.input,
+							'data-output': this.output,
+							click: insertService
+						})
+					);
+				});				
+				$nodes.appendTo( $list );
 			},
 			error: function() {
 				alert('ajax:collectService failed');
 			}
 		});		
-	}
-	
-	
-	$.each( selectServices , function() {
-		$nodes.append(
-			$('<div/>', {
-				'class': 'choose',
-				text: this.resourceName,
-				'data-serviceid': this.resourceID,
-				'data-input': this.input,
-				'data-output': this.output,
-				click: insertService
-			})
-		);
-	});
-	
-	$nodes.appendTo( $(this) );
-	
+	}	
 }//end collectService
 
 function insertService() {
 	var $level = $(this).parent().parent().parent().parent().parent().parent();
 	var t = $(this).text();
-	var currentId = $(this).attr('data-serviceId');
-	
-	//check the chose service is not duplicate.
-	var $nodes = $level.find('.aNode');
-	var isUnique = true;	
-	$.each( $nodes, function() {
-		var id = $(this).attr('data-serviceId');
-		if( id == currentId ) {
-			alert('Can\'t choose the service twice in a level!');
-			isUnique = false;
-			return false;
-		}//end if
-	});//end each
-	
-	if( !isUnique ) {
-		return null;
-	}//end if
-	
+	var currentId = $(this).attr('data-serviceId');	
 	var input = $(this).attr('data-input');
 	var output = $(this).attr('data-output');
 	
-	$('<div/>', {
-		'class': 'aNode',
-		'data-serviceid': currentId,
-		'data-input': input,
-		'data-output': output,
-	})
-	.append(
-		$('<h3/>', {
-			text: t
-		})
-	)
-	.append(
-		$('<div>', {
-			'class': 'closeButton',
-			click: removeService,
-			title: 'Remove this service'
-		})
-	)
-	.append(
-		$('<div>', {
-			'class': 'questionButton',
-			click: seeDetail,
-			title: 'See detail'
-		})
-	)
-	.appendTo($level);
+	createNewNode( $level, t, currentId, input, output );
 	
 	//$(this).remove();
 }//end insertService
@@ -254,6 +333,15 @@ function getDesignFlow() {
 			//new a JSON object
 			var nodes = {};
 			nodes.resourceName = $(this).find('h3').text();
+			
+			//id
+			var id = $(this).attr('data-serviceId');
+			if( id != undefined ) {
+				nodes.resourceID = id;
+			}
+			else {
+				nodes.resourceID = "";
+			}
 			//data.push( $(this).find('h3').text() );
 			
 			//from
@@ -295,11 +383,12 @@ function getDesignFlow() {
 	});//end each
 	//alert( JSON.stringify( designFlowData ) );
 	//$('div#log').text("").text( JSON.stringify( designFlowData ) );
-	
-	uploadDesignFlow( designFlowData );
+	return designFlowData;
 }//end getDesignFlow
 
-function uploadDesignFlow( uploadData ) {
+function uploadDesignFlow() {
+	var uploadData = getDesignFlow();
+	alert( JSON.stringify( uploadData ) );
 	$.ajax({
 		type: 'POST',
 		url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
@@ -312,6 +401,15 @@ function uploadDesignFlow( uploadData ) {
 		//contentType: "application/json; charset=utf-8",
 		//traditional: true,
 		success: function(msg) {
+			var $button = $('.designFlowMenu .aButton').last();
+			$button.text('');
+			var $link = $( '<a>', {
+					href: msg.url,
+					text: 'Download the file',
+					download: "XMLDocument.xml"
+			});
+			$button.append( $link );
+			$button.attr('onclick', '');
 			//$('div#log').text("").text( JSON.stringify( msg ) );
 		},
 		error: function() {

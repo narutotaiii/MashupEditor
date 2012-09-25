@@ -95,7 +95,7 @@ function associatedRecommendedService( serviceId ) {
 		type: 'POST',
 		url: 'http://140.121.197.106:8080/restfulService/systemFlow.do',
 		data: {
-				service: 'relationalRecommand',
+				service: 'relationalRecommend',
 				data: serviceId
 			},
 		dataType: "json",
@@ -131,7 +131,7 @@ function associatedRecommendedService( serviceId ) {
 			});
 		},
 		error: function() {
-			alert('ajax:relationalRecommand failed');
+			alert('ajax:relationalRecommend failed');
 		}
 	});//end ajax
 }//end associatedRecommendedService
